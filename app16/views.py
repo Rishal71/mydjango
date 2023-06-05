@@ -4,6 +4,10 @@ from.forms import RegisterForm, LoginForm, UpdateForm,ChangepasswordForm
 from.models import Register,Gallery
 from django.contrib.auth import logout as logouts
 
+from django.conf import settings
+from django.core.mail import send_mail
+
+
 # Create your views here.
 def index(request):
     return render(request,'index.html')
@@ -28,6 +32,17 @@ def registration(request):
             else:
                 tab=Register(Name=name,Age=age,Place=place,Email=email,Photo=photo,Password=password)
                 tab.save()
+
+
+                subject = 'welcome to abc '
+                message = f'Hi {name}, thank you for registering in geeksforgeeks.'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email, ]
+                send_mail( subject, message, email_from, recipient_list )
+
+
+
+
                 messages.success(request,'DATA SAVED')
                 return redirect('/login')
     else:
